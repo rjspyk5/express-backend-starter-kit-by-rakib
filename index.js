@@ -4,25 +4,36 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const noRoute = require("./middleware/noRoute");
 const errorHandler = require("./middleware/errorHandler");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const morgan = require("morgan");
 const app = express();
 const port = process.env.PORT ?? 3000;
 require("dotenv").config();
 
+// connect Database
+connectDb();
+
 // cors setup
 app.use(
   cors({
-    origin: ["http://localhost:5173", "Here will be added website link"],
+    origin: ["http://localhost:5173", process.env.FRONTEND_URL],
     credentials: true,
     optionSuccessStatus: 200,
   })
 );
 
-// connect Database
-connectDb();
-
 // middleware
 app.use(cookieParser());
 app.use(express.json());
+app.use(helmet());
+app.use(morgan("combined"));
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+app.use(limiter);
 
 // Routes
 app.get("/", (req, res) => {
