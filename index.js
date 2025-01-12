@@ -2,6 +2,8 @@ const express = require("express");
 const connectDb = require("./config/config");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const noRoute = require("./middleware/noRoute");
+const errorHandler = require("./middleware/errorHandler");
 const app = express();
 const port = process.env.PORT ?? 3000;
 require("dotenv").config();
@@ -26,6 +28,10 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+// Error handling middleware
+app.use(noRoute);
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
