@@ -1,6 +1,6 @@
 const { model } = require("mongoose");
 
-const databaseQuery = {
+const database = {
   findWithPaigination: async (model, page, limit, condition) => {
     const skip = (page - 1) * limit;
     const result = await model
@@ -15,4 +15,4 @@ const databaseQuery = {
   update: async (model, condition, data) =>
     await model.updateOne(condition, data, { runValidators: true }),
 };
-module.exports = databaseQuery;
+module.exports = database;
