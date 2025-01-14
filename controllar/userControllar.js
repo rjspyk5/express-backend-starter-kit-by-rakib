@@ -36,6 +36,51 @@ const userControllar = {
       next(error);
     }
   },
+  changePassword: async (req, res, next) => {
+    const { oldPassword, newPassword } = req.body;
+    const id = req.params.id;
+
+    try {
+      const user = await User.findById(id);
+      const isMatched = user.isPasswordMatched(oldPassword);
+      if (!isMatched)
+        return res
+          .status(400)
+          .send({ success: false, message: "Password not matched" });
+      const result = await User.updateOne(
+        { _id: id },
+        { password: newPassword }
+      );
+      if (result?.modifiedCount) {
+        return res.send({ message: "Password change sccessfully" });
+      } else {
+        return res.send({
+          message: "Your given data and previous data is same",
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+  updateProfile: async (req, res, next) => {
+    const data = req?.body;
+    const id = req.params.id;
+    const query = { _id: id };
+    try {
+      const result = await User.updateOne(query, data, {
+        runValidators: true,
+      });
+      if (result?.modifiedCount) {
+        return res.send({ message: "Profile Update Successfully" });
+      } else {
+        return res.send({
+          message: "Your given data and previous data is same",
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = userControllar;
