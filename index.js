@@ -8,6 +8,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const morgan = require("morgan");
 const userControllar = require("./controllar/userControllar");
+const verifyAdminstation = require("./middleware/verifyAdminstration");
 const app = express();
 const port = process.env.PORT ?? 3000;
 require("dotenv").config();
@@ -29,12 +30,13 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
 app.use(morgan("combined"));
-
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
 });
 app.use(limiter);
+// custom middleware
+app.use("/users", verifyAdminstation.verifyAdmin);
 
 // Routes
 app.get("/", (req, res) => {
@@ -42,6 +44,8 @@ app.get("/", (req, res) => {
 });
 app.post("/reg", userControllar.register);
 app.post("/login", userControllar.login);
+app.put("/profile/:id", userControllar.updateProfile);
+app.get("/users", userControllar.getUsers);
 
 // Error handling middleware
 app.use(noRoute);

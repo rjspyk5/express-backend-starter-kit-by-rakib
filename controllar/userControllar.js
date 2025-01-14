@@ -71,12 +71,41 @@ const userControllar = {
         runValidators: true,
       });
       if (result?.modifiedCount) {
-        return res.send({ message: "Profile Update Successfully" });
+        return res.send({
+          message: "Profile Update Successfully",
+          success: true,
+        });
       } else {
         return res.send({
           message: "Your given data and previous data is same",
+          success: false,
         });
       }
+    } catch (error) {
+      next(error);
+    }
+  },
+  getUsers: async (req, res, next) => {
+    try {
+      const result = await User.find();
+      return res.send({
+        message: "User data retrive Successfully",
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+  getUser: async (req, res, next) => {
+    const id = req.params.id;
+    try {
+      const result = await User.findOne({ _id: id });
+      return res.send({
+        message: "User data retrive Successfully",
+        success: true,
+        data: result,
+      });
     } catch (error) {
       next(error);
     }
