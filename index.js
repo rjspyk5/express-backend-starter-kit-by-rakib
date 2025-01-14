@@ -7,6 +7,7 @@ const errorHandler = require("./middleware/errorHandler");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const morgan = require("morgan");
+const userControllar = require("./controllar/userControllar");
 const app = express();
 const port = process.env.PORT ?? 3000;
 require("dotenv").config();
@@ -39,6 +40,8 @@ app.use(limiter);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+app.post("/reg", userControllar.register);
+app.post("/login", userControllar.login);
 
 // Error handling middleware
 app.use(noRoute);

@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // Hasging password before new user
-userSchema.pre("save", async (next) => {
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
@@ -25,7 +25,7 @@ userSchema.pre("save", async (next) => {
 });
 
 // create a methods into user model which i can use when i get user data..in user data will have this method also
-userSchema.methods.isPasswordMatched = async (givenPass) => {
+userSchema.methods.isPasswordMatched = async function (givenPass) {
   return await bcrypt.compare(givenPass, this.password);
 };
 

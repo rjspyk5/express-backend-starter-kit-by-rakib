@@ -1,5 +1,3 @@
-const { model } = require("mongoose");
-
 const database = {
   findWithPaigination: async (model, page, limit, condition) => {
     const skip = (page - 1) * limit;
