@@ -8,6 +8,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const morgan = require("morgan");
 const userRouter = require("./routes/user.routes");
+const { routes } = require("./routes");
 const app = express();
 const port = process.env.PORT ?? 3000;
 require("dotenv").config();
@@ -37,10 +38,7 @@ app.use(limiter);
 // custom middleware
 
 // Routes
-app.use("/api/v1/users", userRouter);
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+app.use("/api/v1", routes);
 
 // Error handling middleware
 app.use(noRoute);
