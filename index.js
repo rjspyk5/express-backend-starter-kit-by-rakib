@@ -7,8 +7,7 @@ const errorHandler = require("./middleware/errorHandler");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const morgan = require("morgan");
-const userControllar = require("./controllar/userControllar");
-const verifyAdminstation = require("./middleware/verifyAdminstration");
+const userRouter = require("./routes/user.routes");
 const app = express();
 const port = process.env.PORT ?? 3000;
 require("dotenv").config();
@@ -36,16 +35,12 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 // custom middleware
-app.use("/users", verifyAdminstation.verifyAdmin);
 
 // Routes
+app.use("/api/v1/users", userRouter);
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
-app.post("/reg", userControllar.register);
-app.post("/login", userControllar.login);
-app.put("/profile/:id", userControllar.updateProfile);
-app.get("/users", userControllar.getUsers);
 
 // Error handling middleware
 app.use(noRoute);
